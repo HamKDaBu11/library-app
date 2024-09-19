@@ -1,6 +1,7 @@
 'use client'
 
 import Card from '@/components/Card/Card';
+import Dropdown from '@/components/Dropdown/Dropdown';
 import NavBar from '@/components/NavBar/NavBar';
 import { NextUIProvider } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
@@ -41,12 +42,25 @@ const BOOKS = [
         author: 'George R.R Martin',
         publishedDate: '1996',
         genre: 'Fantasy'
-    }
+    },
+    {
+        id: 6,
+        title: 'The Hound of the Baskervilles',
+        author: 'Arthur Conan Doyle',
+        publishedDate: '1885',
+        genre: 'Crime'
+    },
+]
+
+const GENRES = [
+    { id: 1, title: 'Fantasy' },
+    { id: 2, title: 'Crime' }
 ]
 
 export default function BookList() {
     const router = useRouter();
     const [updatedBooks, setUpdatedBooks] = useState(BOOKS);
+    const [updatedGenres, setUpdatedGenres] = useState(GENRES);
 
     const createQueryString = (name: any, value: any) => {
         // debugger
@@ -64,15 +78,26 @@ export default function BookList() {
         }))
     }
 
+    function handleGenresFilter(e: any) {
+        setUpdatedBooks(BOOKS.filter((book: any) => {
+            return (
+                book.genre === e
+            )
+        }))
+    }
+
     console.log("UPDATED BOOKS: ", updatedBooks)
 
     return (
         <NextUIProvider>
             <div>
                 <NavBar addBooksFilter={handleBooksFilter} />
+                <div className='flex justify-end m-4'>
+                    <Dropdown addGenresFilter={handleGenresFilter} genres={GENRES} />
+                </div>
                 <div className='flex justify-center mt-4'>
                     <ul>
-                        {updatedBooks.length > 1 ? updatedBooks.map((book: any) => {
+                        {updatedBooks.length >= 1 ? updatedBooks.map((book: any) => {
                             return (
                                 // <li key={book.id}>{book.title}</li>
                                 <Card className="mb-1">
@@ -88,9 +113,9 @@ export default function BookList() {
                                 </Card>
                             )
                         })
-                        :
-                        <h1>Sorry, this book does not exist.</h1>
-                    }
+                            :
+                            <h1>Sorry, this book does not exist.</h1>
+                        }
                     </ul>
                 </div>
             </div>
