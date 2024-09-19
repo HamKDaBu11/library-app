@@ -1,6 +1,17 @@
-import Link from 'next/link'
+'use client'
 
-const NavBar = () => {
+import { Input } from "@nextui-org/input";
+import Link from 'next/link';
+import { useState } from "react";
+
+const NavBar = (props: any) => {
+    const [input, setInput] = useState("")
+
+    function handleInput(e: any) {
+        setInput(e.target.value)
+        props.addBooksFilter(input)
+    }
+
     return (
         <nav className="flex items-center bg-teal-500 p-6">
             <div className="flex items-center flex-shrink-0 text-white mr-6">
@@ -12,6 +23,9 @@ const NavBar = () => {
                         Add Book
                     </Link>
                 </div>
+            </div>
+            <div className="flex w-1/4 flex-wrap md:flex-nowrap gap-4">
+                <Input size="sm" type="text" value={input} label="Search books by title or author...." onChange={handleInput} />
             </div>
         </nav>
     )
