@@ -19,9 +19,9 @@ const Dropdown = (props: any) => {
             selectedKeys={values}
             onChange={handleSelectionChange}
         >
-            {props.genres.map((genre: any) => (
-                <SelectItem key={genre.title}>
-                    {genre.title}
+            {props.genres.map((item: any) => (
+                <SelectItem key={item.genre}>
+                    {item.genre}
                 </SelectItem>
             ))}
         </Select>
