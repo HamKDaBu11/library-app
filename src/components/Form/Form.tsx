@@ -1,6 +1,7 @@
 'use client'
 
 import { bookSchema } from '@/schemas';
+import axios from 'axios';
 import { useFormik } from 'formik';
 
 const Form = (props: any) => {
@@ -8,18 +9,40 @@ const Form = (props: any) => {
     // be called when the form is submitted
     const formik = useFormik({
         initialValues: {
-            title: props.book_data.title,
-            author: props.book_data.author,
-            publishedDate: props.book_data.publishedDate,
-            genre: props.book_data.genre
+            title: props.book_data?.title,
+            author: props.book_data?.author,
+            publishedDate: props.book_data?.publishedDate,
+            genre: props.book_data?.genre
         },
         validationSchema: bookSchema,
-        onSubmit: () => {
-            console.log("Submitted")
+        onSubmit: async (values: any, actions: any) => {
+            // console.log("Submitted")
+            try {
+                if (formik.initialValues.title !== undefined) {
+                    const response = await axios.put(`http://localhost:5000/api/books/${props.book_data.id}`, values)
+                    console.log(response.data)
+                } else {
+                    const response = await axios.post('http://localhost:5000/api/books/', {
+                        title: values.title,
+                        author: values.author,
+                        publishedDate: values.publishedDate,
+                        genre: values.genre
+                    })
+                    console.log(response.data)
+                }
+            } catch (e) {
+                console.log(e)
+            } finally {
+                actions.setSubmitting(false)
+            }
+
         },
     });
 
-    console.log(formik.errors)
+    // console.log(formik.errors)
+
+    // console.log("PROPS: ", props.book_data)
+    console.log("INITIAL VALUES: ", formik.initialValues)
 
     return (
         <form onSubmit={formik.handleSubmit}>
